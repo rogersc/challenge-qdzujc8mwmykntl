@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: challenge-qdzujc8mwmykntl
+  namespace: challenge-qdzujc8mwmykntl
+spec:
+  rules:
+  - host: challenge.promofarma.com
+    http:
+      paths:
+        - pathType: Prefix
+          path: /
+          backend:
+            service:
+              name: challenge-qdzujc8mwmykntl
+              port:
+                number: 80

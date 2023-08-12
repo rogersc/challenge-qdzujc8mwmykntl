@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: challenge-qdzujc8mwmykntl
+  namespace: challenge-qdzujc8mwmykntl
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: challenge-qdzujc8mwmykntl
+  template:
+    metadata:
+      labels:
+        app: challenge-qdzujc8mwmykntl
+    spec:
+      volumes:
+      - name: config
+        configMap:
+          name: nginx-config
+          items:
+          - key: config
+            path: default.conf
+      containers:
+        - name: php-fpm
+          image: challenge-qdzujc8mwmykntl-php-fpm:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: challenge-qdzujc8mwmykntl
+          command:
+        - name: nginx
+          image: challenge-qdzujc8mwmykntl-nginx:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+          - name: http
+            containerPort: 80
+            protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          volumeMounts:
+            - name: config
+              mountPath: /etc/nginx/conf.d
